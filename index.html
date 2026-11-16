@@ -3,78 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>雲林揪夥 YunlinMeet - 互動原型</title>
+  <title>雲林揪夥 YunlinMeet 2.0 - 在地創生社群媒合</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    body { background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     .phone {
       width: 390px; height: 844px; background: #f8fafc; border-radius: 40px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 10px solid #0f172a;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); border: 10px solid #1e293b;
       overflow: hidden; position: relative; display: flex; flex-direction: column;
     }
-    .status-bar { height: 36px; background: #16a34a; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 12px; font-weight: 600; }
-    .screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 70px; }
+    .status-bar { height: 36px; background: #15803d; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-size: 12px; font-weight: 600; }
+    .screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 76px; }
     .screen.active { display: flex; }
-    .header { background: #16a34a; color: white; padding: 16px 20px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+    .header { background: linear-gradient(135deg, #15803d, #16a34a); color: white; padding: 14px 20px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
     .btn { background: #16a34a; color: white; border: none; padding: 12px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
     .btn:active { transform: scale(0.98); background: #15803d; }
     .btn-outline { background: white; color: #16a34a; border: 1.5px solid #16a34a; }
-    .card { background: white; border-radius: 16px; padding: 16px; margin: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .tag { display: inline-block; background: #dcfce7; color: #166534; font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin-right: 4px; }
-    .input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 12px; font-size: 14px; }
+    .card { background: white; border-radius: 16px; padding: 16px; margin: 12px 16px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; }
+    .tag { display: inline-block; background: #dcfce7; color: #166534; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin: 0 4px 4px 0; }
+    .tag-ride { background: #fef3c7; color: #b45309; }
+    .tag-coin { background: #e0f2fe; color: #0369a1; }
+    .input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 10px; font-size: 14px; outline: none; }
+    .input:focus { border-color: #16a34a; }
+    .chip-bar { display: flex; gap: 6px; padding: 10px 16px 2px; overflow-x: auto; scrollbar-width: none; }
+    .chip { background: white; border: 1px solid #cbd5e1; color: #475569; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .chip.active { background: #16a34a; color: white; border-color: #16a34a; }
     .nav-bar {
-      position: absolute; bottom: 0; width: 100%; height: 64px; background: white;
+      position: absolute; bottom: 0; width: 100%; height: 66px; background: white;
       border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center;
     }
-    .nav-item { text-align: center; font-size: 12px; color: #64748b; cursor: pointer; flex: 1; padding: 8px 0; }
+    .nav-item { text-align: center; font-size: 11px; color: #64748b; cursor: pointer; flex: 1; padding: 6px 0; }
     .nav-item.active { color: #16a34a; font-weight: 700; }
-    .chat-box { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-    .msg { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; }
+    .chat-box { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-bottom: 60px; }
+    .msg { max-width: 78%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.45; }
     .msg.other { background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; }
     .msg.me { background: #16a34a; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .chat-input-area { display: flex; gap: 8px; padding: 10px 16px; background: white; border-top: 1px solid #e2e8f0; position: absolute; bottom: 64px; width: 100%; }
+    .chat-input-area { display: flex; gap: 8px; padding: 10px 16px; background: white; border-top: 1px solid #e2e8f0; position: absolute; bottom: 66px; width: 100%; }
+    .progress-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+    .progress-fill { height: 100%; background: #16a34a; border-radius: 4px; }
   </style>
 </head>
 <body>
 
 <div class="phone">
-  <div class="status-bar"><span>9:41</span><span>雲林揪夥 5G</span></div>
+  <div class="status-bar"><span>9:41</span><span>雲林揪夥 5G • 永續版</span></div>
 
   <!-- 1. 登入畫面 -->
-  <div id="screen-login" class="screen active" style="justify-content: center; padding: 30px; background: white;">
-    <div style="text-align: center; margin-bottom: 30px;">
-      <div style="font-size: 48px;">🌱</div>
-      <h1 style="color: #16a34a; font-size: 26px; margin-top: 8px;">雲林揪夥 YunlinMeet</h1>
-      <p style="color: #64748b; font-size: 14px; margin-top: 4px;">在地青農 × 文創小旅行社群媒合</p>
+  <div id="screen-login" class="screen active" style="justify-content: center; padding: 28px; background: white;">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div style="width: 72px; height: 72px; background: #dcfce7; border-radius: 20px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 38px;">🌾</div>
+      <h1 style="color: #15803d; font-size: 25px;">雲林揪夥 YunlinMeet</h1>
+      <p style="color: #64748b; font-size: 13px; margin-top: 6px;">首創「共乘互助 × 青農創生 × 永續積分」社群</p>
     </div>
-    <input class="input" type="text" value="huwei_student@nfu.edu.tw" placeholder="輸入帳號或信箱" />
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 12px; color: #166534;">
+      ✨ <b>差異化亮點：</b>不同於一般純聊天交友軟體，我們解決雲林偏鄉交通共乘痛點，並透過在地農創任務累積雲林幣！
+    </div>
+    <input class="input" type="text" value="nfu_student@gm.nfu.edu.tw" placeholder="輸入學校或個人信箱" />
     <input class="input" type="password" value="••••••••" placeholder="輸入密碼" />
-    <button class="btn" onclick="go('screen-home', 0)">立即登入探索雲林</button>
+    <button class="btn" onclick="go('screen-home', 0)">進入雲林在地社群</button>
   </div>
 
-  <!-- 2. 首頁動態牆 -->
+  <!-- 2. 首頁動態牆（含即時搜尋與鄉鎮篩選） -->
   <div id="screen-home" class="screen">
-    <div class="header"><span>探索雲林在地揪團</span><span style="font-size: 13px;">📍 雲林縣</span></div>
+    <div class="header">
+      <div>
+        <div>探索雲林揪團</div>
+        <div style="font-size: 11px; font-weight: 400; opacity: 0.9;">目前雲林幣餘額：<span id="user-coins">120</span> 枚</div>
+      </div>
+      <button onclick="go('screen-create', 0)" style="background: white; color: #15803d; border: none; padding: 7px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;">＋ 發起揪團</button>
+    </div>
+
     <div style="padding: 12px 16px 0;">
-      <input class="input" style="margin-bottom: 0;" type="text" placeholder="搜尋：古坑咖啡、虎尾眷村、北港..." />
+      <input id="search-input" class="input" style="margin-bottom: 0; background: white;" type="text" oninput="filterEvents()" placeholder="🔍 搜尋關鍵字（如：咖啡、眷村、共乘、北港...）" />
     </div>
 
-    <div class="card" onclick="go('screen-detail', 0)" style="cursor: pointer;">
-      <div style="height: 130px; background: linear-gradient(135deg, #15803d, #84cc16); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; margin-bottom: 12px;">
-        ☕ 古坑華山手採咖啡體驗
-      </div>
-      <div><span class="tag">古坑鄉</span><span class="tag">青農導覽</span><span class="tag">剩 2 名額</span></div>
-      <h3 style="margin: 8px 0 4px; font-size: 16px;">週末華山咖啡園一日採豆與烘豆交流</h3>
-      <p style="color: #64748b; font-size: 13px;">主辦人：青農阿豪 • 12/14 (六) 09:30</p>
+    <!-- 雲林鄉鎮快速篩選列 -->
+    <div class="chip-bar">
+      <div class="chip active" onclick="selectTown('全部', this)">全部鄉鎮</div>
+      <div class="chip" onclick="selectTown('虎尾', this)">虎尾鎮</div>
+      <div class="chip" onclick="selectTown('古坑', this)">古坑鄉</div>
+      <div class="chip" onclick="selectTown('北港', this)">北港鎮</div>
+      <div class="chip" onclick="selectTown('口湖', this)">口湖鄉</div>
     </div>
 
-    <div class="card" onclick="go('screen-detail', 0)" style="cursor: pointer;">
-      <div style="height: 130px; background: linear-gradient(135deg, #0369a1, #38bdf8); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; margin-bottom: 12px;">
-        🏛️ 虎尾建國眷村文創走讀
-      </div>
-      <div><span class="tag">虎尾鎮</span><span class="tag">歷史文化</span><span class="tag">攝影交友</span></div>
-      <h3 style="margin: 8px 0 4px; font-size: 16px;">老屋再生市集巡禮＋在地青年手作工作坊</h3>
-      <p style="color: #64748b; font-size: 13px;">主辦人：文創小芸 • 12/15 (日) 14:00</p>
+    <div id="event-list"></div>
+  </div>
+
+  <!-- 新增：發起揪團頁 -->
+  <div id="screen-create" class="screen">
+    <div class="header">
+      <span onclick="go('screen-home', 0)" style="cursor: pointer;">← 取消</span>
+      <span>發起雲林新揪團</span>
+      <span></span>
+    </div>
+    <div class="card">
+      <label style="font-size: 13px; font-weight: 600; color: #334155;">活動標題</label>
+      <input id="new-title" class="input" type="text" placeholder="例如：西螺大橋夕陽單車與醬油文化體驗" />
+      <label style="font-size: 13px; font-weight: 600; color: #334155;">雲林鄉鎮地點</label>
+      <input id="new-loc" class="input" type="text" placeholder="例如：西螺鎮延平老街" />
+      <label style="font-size: 13px; font-weight: 600; color: #334155;">交通共乘提供（雲林在地特色）</label>
+      <input id="new-ride" class="input" type="text" value="🚗 提供虎科大校門口共乘接送（尚有2位）" />
+      <label style="font-size: 13px; font-weight: 600; color: #334155;">活動簡介</label>
+      <textarea id="new-desc" class="input" rows="3" placeholder="輸入活動特色與想認識的旅伴條件..."></textarea>
+      <button class="btn" onclick="createEvent()">發布並賺取 +30 雲林幣</button>
     </div>
   </div>
 
@@ -82,86 +113,277 @@
   <div id="screen-detail" class="screen">
     <div class="header">
       <span onclick="go('screen-home', 0)" style="cursor: pointer;">← 返回</span>
-      <span>活動詳情</span>
+      <span>活動與共乘詳情</span>
       <span></span>
     </div>
     <div class="card">
-      <div style="height: 160px; background: linear-gradient(135deg, #15803d, #84cc16); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; font-weight: bold; margin-bottom: 14px;">
-        ☕ 古坑華山手採咖啡體驗
+      <div id="detail-banner" style="height: 140px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 19px; font-weight: bold; margin-bottom: 12px; text-align: center; padding: 12px;"></div>
+      <div>
+        <span id="detail-loc" class="tag"></span>
+        <span id="detail-ride-tag" class="tag tag-ride"></span>
+        <span class="tag tag-coin">+50 雲林幣回饋</span>
       </div>
-      <span class="tag">雲林縣古坑鄉華山村</span>
-      <h2 style="margin: 10px 0; font-size: 18px;">週末華山咖啡園一日採豆與烘豆交流</h2>
-      <p style="color: #475569; font-size: 14px; line-height: 1.6; margin-bottom: 14px;">
-        想認識雲林在地咖啡產業並結交喜歡戶外旅行的朋友嗎？由返鄉青農阿豪親自帶領，從認識咖啡樹、手採紅果實到親自手沖品嚐，適合虎尾科大同學與外地旅人一起參加！
-      </p>
-      <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 13px; color: #334155; margin-bottom: 16px;">
-        <div>📅 時間：2026/12/14 (六) 09:30 - 15:00</div>
-        <div style="margin-top: 4px;">👥 目前報名：4 / 6 人（含 2 位虎尾大學生）</div>
+      <h2 id="detail-title" style="margin: 8px 0; font-size: 18px;"></h2>
+      <p id="detail-desc" style="color: #475569; font-size: 13.5px; line-height: 1.6; margin-bottom: 12px;"></p>
+
+      <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 10px 12px; border-radius: 10px; font-size: 12.5px; color: #92400e; margin-bottom: 12px;">
+        <b>🚗 交通共乘互助資訊：</b><br>
+        <span id="detail-ride-info"></span>
       </div>
-      <button class="btn" onclick="joinEvent()">立即報名並加入群組聊天</button>
+
+      <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 13px; color: #334155; margin-bottom: 14px;">
+        <div id="detail-time"></div>
+        <div style="margin-top: 6px; font-weight: 600;">成團進度：<span id="detail-count">4 / 6 人</span></div>
+        <div class="progress-bg"><div class="progress-fill" style="width: 75%;"></div></div>
+      </div>
+      <button class="btn" onclick="joinEvent()">報名活動＋預約共乘（+50雲林幣）</button>
     </div>
   </div>
 
-  <!-- 4. 旅伴配對頁 -->
+  <!-- 4. 在地職人與旅伴配對頁（支援多位切換） -->
   <div id="screen-match" class="screen">
-    <div class="header"><span>在地旅伴配對</span><span>🔥 推薦</span></div>
-    <div class="card" style="text-align: center; padding: 24px 16px;">
-      <div style="width: 100px; height: 100px; background: #dcfce7; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 44px;">👨‍🌾</div>
-      <h2 style="font-size: 20px;">青農阿豪，26 歲</h2>
-      <p style="color: #64748b; font-size: 13px; margin: 4px 0 12px;">距離 4.2 公里 • 古坑咖啡莊園主理人</p>
-      <div style="margin-bottom: 16px;">
-        <span class="tag">#古坑咖啡</span><span class="tag">#地方創生</span><span class="tag">#單車環雲林</span>
-      </div>
-      <p style="color: #475569; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-        「歡迎來古坑找我喝咖啡！平常喜歡帶大家認識雲林的農業與私房景點。」
-      </p>
-      <div style="display: flex; gap: 12px;">
-        <button class="btn btn-outline" onclick="alert('已略過此推薦對象')">✕ 略過</button>
-        <button class="btn" onclick="matchSuccess()">♥ 揪團配對</button>
-      </div>
-    </div>
+    <div class="header"><span>在地職人與旅伴配對</span><span>🤝 媒合</span></div>
+    <div id="match-card-container" class="card" style="text-align: center; padding: 20px 16px;"></div>
   </div>
 
-  <!-- 5. 聊天室頁 -->
+  <!-- 5. 聊天室頁（具備智慧自動回覆） -->
   <div id="screen-chat" class="screen">
-    <div class="header"><span>💬 古坑咖啡揪團聊天室</span></div>
+    <div class="header"><span>💬 雲林揪團與共乘群組</span></div>
     <div class="chat-box" id="chat-messages">
-      <div class="msg other">嗨！歡迎加入古坑咖啡體驗揪團 👋</div>
-      <div class="msg other">這週六早上 9:30 在華山國小門口集合喔！</div>
-      <div class="msg me">你好！請問需要自備水壺或防曬用品嗎？</div>
-      <div class="msg other">建議帶個水壺跟輕便鞋子就可以囉，烘豆器材我這邊都會準備！</div>
+      <div class="msg other"><b>青農阿豪：</b>歡迎加入！大家需要從虎尾科技大學共乘過去嗎？</div>
+      <div class="msg other"><b>虎科小涵：</b>我需要共乘！請問週六幾點在學校大門口集合？</div>
+      <div class="msg me">我也要報名＋1！我可以幫忙分攤油資～</div>
     </div>
     <div class="chat-input-area">
-      <input id="chat-input" class="input" style="margin-bottom: 0;" type="text" placeholder="輸入訊息..." />
-      <button class="btn" style="width: 80px;" onclick="sendMsg()">傳送</button>
+      <input id="chat-input" class="input" style="margin-bottom: 0;" type="text" placeholder="輸入訊息（例如：請問要帶什麼？）" onkeypress="if(event.key==='Enter') sendMsg()" />
+      <button class="btn" style="width: 76px;" onclick="sendMsg()">傳送</button>
     </div>
   </div>
 
-  <!-- 6. 個人檔案頁 -->
+  <!-- 6. 個人檔案與雲林永續護照 -->
   <div id="screen-profile" class="screen">
-    <div class="header"><span>個人檔案</span></div>
+    <div class="header"><span>我的雲林永續護照</span></div>
     <div class="card" style="text-align: center;">
-      <div style="width: 80px; height: 80px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 36px;">🎓</div>
+      <div style="width: 76px; height: 76px; background: #dcfce7; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 36px;">🎓</div>
       <h3>虎科大學生</h3>
-      <p style="color: #64748b; font-size: 13px; margin: 4px 0 12px;">國立虎尾科技大學 • 雲林探索者</p>
-      <div><span class="tag">#在地美食</span><span class="tag">#農村體驗</span><span class="tag">#週末小旅行</span></div>
+      <p style="color: #64748b; font-size: 12.5px; margin: 4px 0 12px;">國立虎尾科技大學 • 雲林探索等級 Lv.3</p>
+      <div style="display: flex; justify-content: space-around; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+        <div><div style="font-size: 18px; font-weight: 700; color: #16a34a;" id="profile-coins">120</div><div style="font-size: 11px; color: #64748b;">雲林永續幣</div></div>
+        <div><div style="font-size: 18px; font-weight: 700; color: #0284c7;" id="profile-events">2</div><div style="font-size: 11px; color: #64748b;">參與在地活動</div></div>
+        <div><div style="font-size: 18px; font-weight: 700; color: #d97706;">3</div><div style="font-size: 11px; color: #64748b;">共乘減碳次數</div></div>
+      </div>
     </div>
     <div class="card">
-      <h4 style="margin-bottom: 8px;">已報名活動</h4>
-      <p style="font-size: 14px; color: #16a34a; font-weight: 600;">✓ 週末華山咖啡園一日採豆與烘豆交流</p>
+      <h4 style="margin-bottom: 8px; font-size: 14px;">🏆 已解鎖在地成就徽章</h4>
+      <span class="tag">☕ 古坑咖啡採豆達人</span>
+      <span class="tag tag-ride">🚗 虎尾共乘友善夥伴</span>
+      <span class="tag tag-coin">🌱 雲林地方創生推手</span>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom: 6px; font-size: 14px;">🎁 雲林幣在地兌換（合作青農）</h4>
+      <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">• 100 枚：兌換古坑華山濾掛咖啡包 1 盒<br>• 150 枚：折抵虎尾建國眷村手作體驗費 $100</p>
     </div>
   </div>
 
   <!-- 底部導覽列 -->
   <div class="nav-bar" id="nav-bar" style="display: none;">
     <div class="nav-item active" onclick="go('screen-home', 0)">🏠<br>探索</div>
-    <div class="nav-item" onclick="go('screen-match', 1)">🔥<br>配對</div>
-    <div class="nav-item" onclick="go('screen-chat', 2)">💬<br>聊天</div>
-    <div class="nav-item" onclick="go('screen-profile', 3)">👤<br>我的</div>
+    <div class="nav-item" onclick="go('screen-match', 1)">🤝<br>達人配對</div>
+    <div class="nav-item" onclick="go('screen-chat', 2)">💬<br>共乘群組</div>
+    <div class="nav-item" onclick="go('screen-profile', 3)">🏅<br>永續護照</div>
   </div>
 </div>
 
 <script>
+  let coins = 120;
+  let joinedCount = 2;
+  let currentTown = '全部';
+  let matchIndex = 0;
+
+  const eventsData = [
+    {
+      town: '古坑', banner: '☕ 古坑華山手採咖啡農事體驗', bg: 'linear-gradient(135deg, #15803d, #84cc16)',
+      loc: '雲林縣古坑鄉華山村', rideTag: '🚗 虎尾共乘接送', rideInfo: '主辦人提供休旅車，09:00 虎尾高鐵站／虎科大校門口發車',
+      title: '週末華山咖啡園一日採豆與烘豆交流', host: '青農阿豪', time: '2026/12/14 (六) 09:30',
+      desc: '由返鄉青農阿豪親自帶領，從認識咖啡樹、手採紅果實到親自手沖品嚐，適合虎科大學生與外地旅人一起參加！'
+    },
+    {
+      town: '虎尾', banner: '🏛️ 虎尾建國眷村文創與植物染', bg: 'linear-gradient(135deg, #0369a1, #38bdf8)',
+      loc: '雲林縣虎尾鎮建國一村', rideTag: '🚲 單車友善路線', rideInfo: '距離虎尾科技大學僅 8 分鐘車程，可相約騎 YouBike 前往',
+      title: '老屋再生市集巡禮＋在地青年手作工作坊', host: '文創小芸', time: '2026/12/15 (日) 14:00',
+      desc: '走訪虎尾歷史建築群，結合在地文創市集與天然植物染體驗，認識喜歡攝影與老屋文化的雲林夥伴。'
+    },
+    {
+      town: '北港', banner: '🏮 北港朝天宮工藝與老街美食團', bg: 'linear-gradient(135deg, #b91c1c, #f59e0b)',
+      loc: '雲林縣北港鎮中山路', rideTag: '🚌 台灣好行共乘', rideInfo: '相約於斗六／虎尾客運站集合搭乘北港虎尾線前往',
+      title: '百年廟宇交趾陶導覽＋在地傳統小吃巡禮', host: '文史小宇', time: '2026/12/20 (六) 10:30',
+      desc: '跟著在地文史青年一起探索北港朝天宮傳統工藝，並一起分食鴨肉飯、麵線糊與傳統狀元餅！'
+    },
+    {
+      town: '口湖', banner: '🐟 口湖金湖休閒農業區生態體驗', bg: 'linear-gradient(135deg, #0f766e, #2dd4bf)',
+      loc: '雲林縣口湖鄉成龍濕地', rideTag: '🚗 斗六/虎尾共乘', rideInfo: '已媒合 1 台自小客車，尚有 3 個共乘座位可分攤油資',
+      title: '成龍濕地夕陽攝影＋智慧漁業食魚教育', host: '養殖青農阿凱', time: '2026/12/21 (日) 13:30',
+      desc: '深入雲林沿海體驗友善生態養殖與濕地夕陽美景，適合喜歡自然生態與深度旅遊的朋友。'
+    }
+  ];
+
+  const matchProfiles = [
+    {
+      emoji: '👨‍🌾', name: '青農阿豪，26 歲', role: '古坑咖啡莊園主理人 • 距離 4.2 km',
+      tags: ['#古坑咖啡', '#提供共乘', '#地方創生'],
+      bio: '「歡迎來古坑找我喝咖啡！週末開車往返虎尾與華山，可以順路載想上山體驗的同學。」'
+    },
+    {
+      emoji: '👩‍🎨', name: '文創小芸，23 歲', role: '虎尾建國眷村駐村藝術家 • 距離 1.5 km',
+      tags: ['#虎尾眷村', '#植物染手作', '#底片攝影'],
+      bio: '「正在籌備週末的眷村老屋走讀活動，想找喜歡攝影跟文創的朋友一起交流！」'
+    },
+    {
+      emoji: '🧑‍🏫', name: '文史小宇，25 歲', role: '北港在地文化導覽員 • 距離 12 km',
+      tags: ['#北港美食', '#廟宇工藝', '#深度旅遊'],
+      bio: '「帶你吃遍北港人從小吃到大的隱藏版小吃，順便認識傳統剪黏與交趾陶藝術！」'
+    }
+  ];
+
+  function updateCoins(add) {
+    coins += add;
+    document.getElementById('user-coins').textContent = coins;
+    document.getElementById('profile-coins').textContent = coins;
+  }
+
+  function renderEvents() {
+    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+    const list = document.getElementById('event-list');
+    list.innerHTML = '';
+
+    const filtered = eventsData.filter(ev => {
+      const matchTown = currentTown === '全部' || ev.town === currentTown;
+      const matchKey = !keyword || ev.title.toLowerCase().includes(keyword) || ev.loc.toLowerCase().includes(keyword) || ev.rideTag.toLowerCase().includes(keyword);
+      return matchTown && matchKey;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<div style="text-align:center; color:#64748b; padding: 30px; font-size: 14px;">找不到符合條件的雲林活動，試試看發起新揪團吧！</div>';
+      return;
+    }
+
+    filtered.forEach((ev, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.cursor = 'pointer';
+      card.onclick = () => openDetail(ev);
+      card.innerHTML = `
+        <div style="height: 115px; background: ${ev.bg}; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px; padding: 10px; text-align: center;">
+          ${ev.banner}
+        </div>
+        <div>
+          <span class="tag">${ev.town}</span>
+          <span class="tag tag-ride">${ev.rideTag}</span>
+          <span class="tag tag-coin">+50幣</span>
+        </div>
+        <h3 style="margin: 6px 0 4px; font-size: 15.5px;">${ev.title}</h3>
+        <p style="color: #64748b; font-size: 12.5px;">主辦人：${ev.host} • ${ev.time}</p>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function selectTown(town, el) {
+    currentTown = town;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderEvents();
+  }
+
+  function filterEvents() {
+    renderEvents();
+  }
+
+  function openDetail(ev) {
+    const banner = document.getElementById('detail-banner');
+    banner.textContent = ev.banner;
+    banner.style.background = ev.bg;
+    document.getElementById('detail-loc').textContent = ev.loc;
+    document.getElementById('detail-ride-tag').textContent = ev.rideTag;
+    document.getElementById('detail-title').textContent = ev.title;
+    document.getElementById('detail-desc').textContent = ev.desc;
+    document.getElementById('detail-ride-info').textContent = ev.rideInfo;
+    document.getElementById('detail-time').textContent = '📅 活動時間：' + ev.time;
+    go('screen-detail', 0);
+  }
+
+  function createEvent() {
+    const title = document.getElementById('new-title').value.trim() || '西螺大橋夕陽單車與醬油文化體驗';
+    const loc = document.getElementById('new-loc').value.trim() || '雲林縣西螺鎮';
+    const ride = document.getElementById('new-ride').value.trim() || '🚗 提供虎科大校門口共乘接送';
+    const desc = document.getElementById('new-desc').value.trim() || '一起騎單車逛西螺延平老街，體驗百年手工柴燒醬油釀造！';
+
+    eventsData.unshift({
+      town: loc.slice(0, 2), banner: '🌉 ' + title, bg: 'linear-gradient(135deg, #6d28d9, #a855f7)',
+      loc: loc, rideTag: '🚗 提供共乘', rideInfo: ride,
+      title: title, host: '虎科大學生 (我)', time: '2026/12/22 (二) 15:00', desc: desc
+    });
+    updateCoins(30);
+    renderEvents();
+    alert('✅ 發布成功！已獲得 +30 枚雲林永續幣！');
+    go('screen-home', 0);
+  }
+
+  function joinEvent() {
+    updateCoins(50);
+    joinedCount++;
+    document.getElementById('profile-events').textContent = joinedCount;
+    alert('🎉 報名與共乘預約成功！獲得 +50 枚雲林永續幣，已為您開啟群組聊天室。');
+    go('screen-chat', 2);
+  }
+
+  function renderMatchCard() {
+    const p = matchProfiles[matchIndex % matchProfiles.length];
+    const tagsHtml = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    document.getElementById('match-card-container').innerHTML = `
+      <div style="width: 96px; height: 96px; background: #dcfce7; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 46px;">${p.emoji}</div>
+      <h2 style="font-size: 20px;">${p.name}</h2>
+      <p style="color: #64748b; font-size: 13px; margin: 4px 0 12px;">${p.role}</p>
+      <div style="margin-bottom: 14px;">${tagsHtml}</div>
+      <p style="color: #475569; font-size: 13.5px; line-height: 1.55; margin-bottom: 20px; background: #f8fafc; padding: 12px; border-radius: 12px;">${p.bio}</p>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-outline" onclick="nextMatch()">✕ 換一位達人</button>
+        <button class="btn" onclick="matchSuccess('${p.name}')">♥ 揪團與共乘配對</button>
+      </div>
+    `;
+  }
+
+  function nextMatch() {
+    matchIndex++;
+    renderMatchCard();
+  }
+
+  function matchSuccess(name) {
+    alert(`💚 配對成功！你與「${name}」互相感興趣，現在可以直接討論共乘與行程！`);
+    go('screen-chat', 2);
+  }
+
+  function sendMsg() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const box = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'msg me';
+    div.textContent = text;
+    box.appendChild(div);
+    input.value = '';
+    box.scrollTop = box.scrollHeight;
+
+    setTimeout(() => {
+      const reply = document.createElement('div');
+      reply.className = 'msg other';
+      reply.innerHTML = '<b>青農阿豪：</b>收到！沒問題，出發前一天我會在群組發集合定位📍';
+      box.appendChild(reply);
+      box.scrollTop = box.scrollHeight;
+    }, 700);
+  }
+
   function go(screenId, navIndex) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -169,31 +391,4 @@
     if (screenId === 'screen-login') {
       navBar.style.display = 'none';
     } else {
-      navBar.style.display = 'flex';
-      document.querySelectorAll('.nav-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx === navIndex);
-      });
-    }
-  }
-  function joinEvent() {
-    alert('🎉 報名成功！已自動為您加入「古坑咖啡揪團聊天室」。');
-    go('screen-chat', 2);
-  }
-  function matchSuccess() {
-    alert('💚 配對成功！你與「青農阿豪」互相感興趣，現在可以開始聊天了！');
-    go('screen-chat', 2);
-  }
-  function sendMsg() {
-    const input = document.getElementById('chat-input');
-    if (!input.value.trim()) return;
-    const box = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = 'msg me';
-    div.textContent = input.value;
-    box.appendChild(div);
-    input.value = '';
-    box.scrollTop = box.scrollHeight;
-  }
-</script>
-</body>
-</html>
+      navBar.style.display = '
