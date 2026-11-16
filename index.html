@@ -19,13 +19,14 @@
     .btn { background: #16a34a; color: white; border: none; padding: 12px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
     .btn:active { transform: scale(0.98); background: #15803d; }
     .btn-outline { background: white; color: #16a34a; border: 1.5px solid #16a34a; }
-    .card { background: white; border-radius: 16px; padding: 16px; margin: 12px 16px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; }
+    .card { background: white; border-radius: 16px; padding: 16px; margin: 12px 16px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; cursor: pointer; transition: transform 0.1s; }
+    .card:active { transform: scale(0.99); }
     .tag { display: inline-block; background: #dcfce7; color: #166534; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin: 0 4px 4px 0; }
     .tag-ride { background: #fef3c7; color: #b45309; }
     .tag-coin { background: #e0f2fe; color: #0369a1; }
-    .input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 10px; font-size: 14px; outline: none; }
+    .input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 10px; font-size: 14px; outline: none; background: white; }
     .input:focus { border-color: #16a34a; }
-    .chip-bar { display: flex; gap: 6px; padding: 10px 16px 2px; overflow-x: auto; flex-shrink: 0; }
+    .chip-bar { display: flex; gap: 6px; padding: 10px 16px 2px; overflow-x: auto; flex-shrink: 0; scrollbar-width: none; }
     .chip { background: white; border: 1px solid #cbd5e1; color: #475569; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
     .chip.active { background: #16a34a; color: white; border-color: #16a34a; }
     .nav-bar {
@@ -42,8 +43,8 @@
     .progress-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 8px 0; }
     .progress-fill { height: 100%; background: #16a34a; border-radius: 4px; }
     .toast {
-      position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.92); color: white; padding: 10px 16px;
+      position: absolute; top: 46px; left: 50%; transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.94); color: white; padding: 10px 16px;
       border-radius: 12px; font-size: 13px; z-index: 100; display: none;
       width: 85%; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
@@ -63,7 +64,7 @@
       <p style="color: #64748b; font-size: 13px; margin-top: 6px;">首創「共乘互助 × 青農創生 × 永續積分」社群</p>
     </div>
     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 12px; color: #166534;">
-      ✨ <b>差異化亮點：</b>不同於一般純聊天交友軟體，我們解決雲林偏鄉交通共乘痛點，並透過在地農創任務累積雲林幣！
+      ✨ <b>期末專題亮點：</b>解決雲林偏鄉交通共乘痛點，結合在地農創任務累積雲林幣！
     </div>
     <input class="input" type="text" value="nfu_student@gm.nfu.edu.tw" placeholder="輸入學校或個人信箱" />
     <input class="input" type="password" value="••••••••" placeholder="輸入密碼" />
@@ -81,7 +82,7 @@
     </div>
 
     <div style="padding: 12px 16px 0;">
-      <input id="search-input" class="input" style="margin-bottom: 0; background: white;" type="text" placeholder="🔍 搜尋關鍵字（如：咖啡、眷村、共乘、北港...）" />
+      <input id="search-input" class="input" style="margin-bottom: 0;" type="text" placeholder="🔍 搜尋關鍵字（咖啡、眷村、共乘、北港...）" />
     </div>
 
     <div class="chip-bar" id="town-chips">
@@ -95,18 +96,18 @@
     <div id="event-list"></div>
   </div>
 
-  <!-- 新增：發起揪團頁 -->
+  <!-- 發起揪團頁 -->
   <div id="screen-create" class="screen">
     <div class="header">
       <span id="btn-cancel-create" style="cursor: pointer;">← 取消</span>
       <span>發起雲林新揪團</span>
       <span></span>
     </div>
-    <div class="card">
+    <div class="card" style="cursor: default;">
       <label style="font-size: 13px; font-weight: 600; color: #334155;">活動標題</label>
       <input id="new-title" class="input" type="text" placeholder="例如：西螺大橋夕陽單車與醬油文化體驗" />
       <label style="font-size: 13px; font-weight: 600; color: #334155;">雲林鄉鎮地點</label>
-      <input id="new-loc" class="input" type="text" placeholder="例如：西螺鎮延平老街" />
+      <input id="new-loc" class="input" type="text" placeholder="例如：雲林縣西螺鎮" />
       <label style="font-size: 13px; font-weight: 600; color: #334155;">交通共乘提供（雲林在地特色）</label>
       <input id="new-ride" class="input" type="text" value="🚗 提供虎科大校門口共乘接送（尚有2位）" />
       <label style="font-size: 13px; font-weight: 600; color: #334155;">活動簡介</label>
@@ -115,14 +116,14 @@
     </div>
   </div>
 
-  <!-- 3. 活動詳情頁 -->
+  <!-- 活動詳情頁 -->
   <div id="screen-detail" class="screen">
     <div class="header">
       <span id="btn-back-detail" style="cursor: pointer;">← 返回</span>
       <span>活動與共乘詳情</span>
       <span></span>
     </div>
-    <div class="card">
+    <div class="card" style="cursor: default;">
       <div id="detail-banner" style="height: 140px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 19px; font-weight: bold; margin-bottom: 12px; text-align: center; padding: 12px;"></div>
       <div>
         <span id="detail-loc" class="tag"></span>
@@ -146,13 +147,13 @@
     </div>
   </div>
 
-  <!-- 4. 在地職人與旅伴配對頁 -->
+  <!-- 達人配對頁 -->
   <div id="screen-match" class="screen">
     <div class="header"><span>在地職人與旅伴配對</span><span>🤝 媒合</span></div>
-    <div id="match-card-container" class="card" style="text-align: center; padding: 20px 16px;"></div>
+    <div id="match-card-container" class="card" style="text-align: center; padding: 20px 16px; cursor: default;"></div>
   </div>
 
-  <!-- 5. 聊天室頁 -->
+  <!-- 共乘群組聊天室 -->
   <div id="screen-chat" class="screen">
     <div class="header"><span>💬 雲林揪團與共乘群組</span></div>
     <div class="chat-box" id="chat-messages">
@@ -166,10 +167,10 @@
     </div>
   </div>
 
-  <!-- 6. 個人檔案與雲林永續護照 -->
+  <!-- 永續護照頁 -->
   <div id="screen-profile" class="screen">
     <div class="header"><span>我的雲林永續護照</span></div>
-    <div class="card" style="text-align: center;">
+    <div class="card" style="text-align: center; cursor: default;">
       <div style="width: 76px; height: 76px; background: #dcfce7; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 36px;">🎓</div>
       <h3>虎科大學生</h3>
       <p style="color: #64748b; font-size: 12.5px; margin: 4px 0 12px;">國立虎尾科技大學 • 雲林探索等級 Lv.3</p>
@@ -179,13 +180,13 @@
         <div><div style="font-size: 18px; font-weight: 700; color: #d97706;">3</div><div style="font-size: 11px; color: #64748b;">共乘減碳次數</div></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" style="cursor: default;">
       <h4 style="margin-bottom: 8px; font-size: 14px;">🏆 已解鎖在地成就徽章</h4>
       <span class="tag">☕ 古坑咖啡採豆達人</span>
       <span class="tag tag-ride">🚗 虎尾共乘友善夥伴</span>
       <span class="tag tag-coin">🌱 雲林地方創生推手</span>
     </div>
-    <div class="card">
+    <div class="card" style="cursor: default;">
       <h4 style="margin-bottom: 6px; font-size: 14px;">🎁 雲林幣在地兌換（合作青農）</h4>
       <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">• 100 枚：兌換古坑華山濾掛咖啡包 1 盒<br>• 150 枚：折抵虎尾建國眷村手作體驗費 $100</p>
     </div>
@@ -282,9 +283,8 @@
     }
 
     function openDetail(ev) {
-      const banner = document.getElementById('detail-banner');
-      banner.textContent = ev.banner;
-      banner.style.background = ev.bg;
+      document.getElementById('detail-banner').textContent = ev.banner;
+      document.getElementById('detail-banner').style.background = ev.bg;
       document.getElementById('detail-loc').textContent = ev.loc;
       document.getElementById('detail-ride-tag').textContent = ev.rideTag;
       document.getElementById('detail-title').textContent = ev.title;
@@ -306,14 +306,13 @@
       });
 
       if (filtered.length === 0) {
-        list.innerHTML = '<div style="text-align:center; color:#64748b; padding: 30px; font-size: 14px;">找不到符合條件的雲林活動，試試看發起新揪團吧！</div>';
+        list.innerHTML = '<div style="text-align:center; color:#64748b; padding: 30px; font-size: 14px;">找不到符合條件的雲林活動，點擊右上角發起新揪團吧！</div>';
         return;
       }
 
       filtered.forEach(ev => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.style.cursor = 'pointer';
         card.innerHTML = `
           <div style="height: 115px; background: ${ev.bg}; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px; padding: 10px; text-align: center;">
             ${ev.banner}
@@ -346,11 +345,13 @@
           <button id="btn-do-match" class="btn">♥ 揪團與共乘配對</button>
         </div>
       `;
-      document.getElementById('btn-next-match').addEventListener('click', () => {
+      document.getElementById('btn-next-match').addEventListener('click', (e) => {
+        e.stopPropagation();
         matchIndex++;
         renderMatchCard();
       });
-      document.getElementById('btn-do-match').addEventListener('click', () => {
+      document.getElementById('btn-do-match').addEventListener('click', (e) => {
+        e.stopPropagation();
         showToast(`💚 配對成功！你與「${p.name}」已開啟聊天室`);
         go('screen-chat', 2);
       });
@@ -377,7 +378,7 @@
       }, 600);
     }
 
-    // 綁定所有按鈕事件
+    // 事件綁定
     document.getElementById('btn-login').addEventListener('click', () => go('screen-home', 0));
     document.getElementById('btn-open-create').addEventListener('click', () => go('screen-create', 0));
     document.getElementById('btn-cancel-create').addEventListener('click', () => go('screen-home', 0));
