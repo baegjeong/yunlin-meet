@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雲林揪夥 YunlinMeet - 互動原型</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .phone {
+      width: 390px; height: 844px; background: #f8fafc; border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 10px solid #0f172a;
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+    }
+    .status-bar { height: 36px; background: #16a34a; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 12px; font-weight: 600; }
+    .screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 70px; }
+    .screen.active { display: flex; }
+    .header { background: #16a34a; color: white; padding: 16px 20px; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+    .btn { background: #16a34a; color: white; border: none; padding: 12px 16px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+    .btn:active { transform: scale(0.98); background: #15803d; }
+    .btn-outline { background: white; color: #16a34a; border: 1.5px solid #16a34a; }
+    .card { background: white; border-radius: 16px; padding: 16px; margin: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .tag { display: inline-block; background: #dcfce7; color: #166534; font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin-right: 4px; }
+    .input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 12px; font-size: 14px; }
+    .nav-bar {
+      position: absolute; bottom: 0; width: 100%; height: 64px; background: white;
+      border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center;
+    }
+    .nav-item { text-align: center; font-size: 12px; color: #64748b; cursor: pointer; flex: 1; padding: 8px 0; }
+    .nav-item.active { color: #16a34a; font-weight: 700; }
+    .chat-box { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+    .msg { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; }
+    .msg.other { background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg.me { background: #16a34a; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-input-area { display: flex; gap: 8px; padding: 10px 16px; background: white; border-top: 1px solid #e2e8f0; position: absolute; bottom: 64px; width: 100%; }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar"><span>9:41</span><span>雲林揪夥 5G</span></div>
+
+  <!-- 1. 登入畫面 -->
+  <div id="screen-login" class="screen active" style="justify-content: center; padding: 30px; background: white;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div style="font-size: 48px;">🌱</div>
+      <h1 style="color: #16a34a; font-size: 26px; margin-top: 8px;">雲林揪夥 YunlinMeet</h1>
+      <p style="color: #64748b; font-size: 14px; margin-top: 4px;">在地青農 × 文創小旅行社群媒合</p>
+    </div>
+    <input class="input" type="text" value="huwei_student@nfu.edu.tw" placeholder="輸入帳號或信箱" />
+    <input class="input" type="password" value="••••••••" placeholder="輸入密碼" />
+    <button class="btn" onclick="go('screen-home', 0)">立即登入探索雲林</button>
+  </div>
+
+  <!-- 2. 首頁動態牆 -->
+  <div id="screen-home" class="screen">
+    <div class="header"><span>探索雲林在地揪團</span><span style="font-size: 13px;">📍 雲林縣</span></div>
+    <div style="padding: 12px 16px 0;">
+      <input class="input" style="margin-bottom: 0;" type="text" placeholder="搜尋：古坑咖啡、虎尾眷村、北港..." />
+    </div>
+
+    <div class="card" onclick="go('screen-detail', 0)" style="cursor: pointer;">
+      <div style="height: 130px; background: linear-gradient(135deg, #15803d, #84cc16); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; margin-bottom: 12px;">
+        ☕ 古坑華山手採咖啡體驗
+      </div>
+      <div><span class="tag">古坑鄉</span><span class="tag">青農導覽</span><span class="tag">剩 2 名額</span></div>
+      <h3 style="margin: 8px 0 4px; font-size: 16px;">週末華山咖啡園一日採豆與烘豆交流</h3>
+      <p style="color: #64748b; font-size: 13px;">主辦人：青農阿豪 • 12/14 (六) 09:30</p>
+    </div>
+
+    <div class="card" onclick="go('screen-detail', 0)" style="cursor: pointer;">
+      <div style="height: 130px; background: linear-gradient(135deg, #0369a1, #38bdf8); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold; margin-bottom: 12px;">
+        🏛️ 虎尾建國眷村文創走讀
+      </div>
+      <div><span class="tag">虎尾鎮</span><span class="tag">歷史文化</span><span class="tag">攝影交友</span></div>
+      <h3 style="margin: 8px 0 4px; font-size: 16px;">老屋再生市集巡禮＋在地青年手作工作坊</h3>
+      <p style="color: #64748b; font-size: 13px;">主辦人：文創小芸 • 12/15 (日) 14:00</p>
+    </div>
+  </div>
+
+  <!-- 3. 活動詳情頁 -->
+  <div id="screen-detail" class="screen">
+    <div class="header">
+      <span onclick="go('screen-home', 0)" style="cursor: pointer;">← 返回</span>
+      <span>活動詳情</span>
+      <span></span>
+    </div>
+    <div class="card">
+      <div style="height: 160px; background: linear-gradient(135deg, #15803d, #84cc16); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; font-weight: bold; margin-bottom: 14px;">
+        ☕ 古坑華山手採咖啡體驗
+      </div>
+      <span class="tag">雲林縣古坑鄉華山村</span>
+      <h2 style="margin: 10px 0; font-size: 18px;">週末華山咖啡園一日採豆與烘豆交流</h2>
+      <p style="color: #475569; font-size: 14px; line-height: 1.6; margin-bottom: 14px;">
+        想認識雲林在地咖啡產業並結交喜歡戶外旅行的朋友嗎？由返鄉青農阿豪親自帶領，從認識咖啡樹、手採紅果實到親自手沖品嚐，適合虎尾科大同學與外地旅人一起參加！
+      </p>
+      <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; font-size: 13px; color: #334155; margin-bottom: 16px;">
+        <div>📅 時間：2026/12/14 (六) 09:30 - 15:00</div>
+        <div style="margin-top: 4px;">👥 目前報名：4 / 6 人（含 2 位虎尾大學生）</div>
+      </div>
+      <button class="btn" onclick="joinEvent()">立即報名並加入群組聊天</button>
+    </div>
+  </div>
+
+  <!-- 4. 旅伴配對頁 -->
+  <div id="screen-match" class="screen">
+    <div class="header"><span>在地旅伴配對</span><span>🔥 推薦</span></div>
+    <div class="card" style="text-align: center; padding: 24px 16px;">
+      <div style="width: 100px; height: 100px; background: #dcfce7; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 44px;">👨‍🌾</div>
+      <h2 style="font-size: 20px;">青農阿豪，26 歲</h2>
+      <p style="color: #64748b; font-size: 13px; margin: 4px 0 12px;">距離 4.2 公里 • 古坑咖啡莊園主理人</p>
+      <div style="margin-bottom: 16px;">
+        <span class="tag">#古坑咖啡</span><span class="tag">#地方創生</span><span class="tag">#單車環雲林</span>
+      </div>
+      <p style="color: #475569; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+        「歡迎來古坑找我喝咖啡！平常喜歡帶大家認識雲林的農業與私房景點。」
+      </p>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-outline" onclick="alert('已略過此推薦對象')">✕ 略過</button>
+        <button class="btn" onclick="matchSuccess()">♥ 揪團配對</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 聊天室頁 -->
+  <div id="screen-chat" class="screen">
+    <div class="header"><span>💬 古坑咖啡揪團聊天室</span></div>
+    <div class="chat-box" id="chat-messages">
+      <div class="msg other">嗨！歡迎加入古坑咖啡體驗揪團 👋</div>
+      <div class="msg other">這週六早上 9:30 在華山國小門口集合喔！</div>
+      <div class="msg me">你好！請問需要自備水壺或防曬用品嗎？</div>
+      <div class="msg other">建議帶個水壺跟輕便鞋子就可以囉，烘豆器材我這邊都會準備！</div>
+    </div>
+    <div class="chat-input-area">
+      <input id="chat-input" class="input" style="margin-bottom: 0;" type="text" placeholder="輸入訊息..." />
+      <button class="btn" style="width: 80px;" onclick="sendMsg()">傳送</button>
+    </div>
+  </div>
+
+  <!-- 6. 個人檔案頁 -->
+  <div id="screen-profile" class="screen">
+    <div class="header"><span>個人檔案</span></div>
+    <div class="card" style="text-align: center;">
+      <div style="width: 80px; height: 80px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 36px;">🎓</div>
+      <h3>虎科大學生</h3>
+      <p style="color: #64748b; font-size: 13px; margin: 4px 0 12px;">國立虎尾科技大學 • 雲林探索者</p>
+      <div><span class="tag">#在地美食</span><span class="tag">#農村體驗</span><span class="tag">#週末小旅行</span></div>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom: 8px;">已報名活動</h4>
+      <p style="font-size: 14px; color: #16a34a; font-weight: 600;">✓ 週末華山咖啡園一日採豆與烘豆交流</p>
+    </div>
+  </div>
+
+  <!-- 底部導覽列 -->
+  <div class="nav-bar" id="nav-bar" style="display: none;">
+    <div class="nav-item active" onclick="go('screen-home', 0)">🏠<br>探索</div>
+    <div class="nav-item" onclick="go('screen-match', 1)">🔥<br>配對</div>
+    <div class="nav-item" onclick="go('screen-chat', 2)">💬<br>聊天</div>
+    <div class="nav-item" onclick="go('screen-profile', 3)">👤<br>我的</div>
+  </div>
+</div>
+
+<script>
+  function go(screenId, navIndex) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    const navBar = document.getElementById('nav-bar');
+    if (screenId === 'screen-login') {
+      navBar.style.display = 'none';
+    } else {
+      navBar.style.display = 'flex';
+      document.querySelectorAll('.nav-item').forEach((item, idx) => {
+        item.classList.toggle('active', idx === navIndex);
+      });
+    }
+  }
+  function joinEvent() {
+    alert('🎉 報名成功！已自動為您加入「古坑咖啡揪團聊天室」。');
+    go('screen-chat', 2);
+  }
+  function matchSuccess() {
+    alert('💚 配對成功！你與「青農阿豪」互相感興趣，現在可以開始聊天了！');
+    go('screen-chat', 2);
+  }
+  function sendMsg() {
+    const input = document.getElementById('chat-input');
+    if (!input.value.trim()) return;
+    const box = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'msg me';
+    div.textContent = input.value;
+    box.appendChild(div);
+    input.value = '';
+    box.scrollTop = box.scrollHeight;
+  }
+</script>
+</body>
+</html>
